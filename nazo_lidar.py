@@ -2,12 +2,11 @@
 import sys
 import serial
 import array
-from struct import unpack
 import math
-
+import cv2
+from struct import unpack
 from PIL import Image
 import numpy as np
-import cv2
 
 def remapDegrees(minAngle, maxAngle, degrees):
     delta = maxAngle - minAngle;
@@ -76,38 +75,22 @@ def main():
                 pac_header3,
                 pac_rotation_speed,
                 pac_angle_begin,
-                pac_distance_0,
-                pac_reserved_0,
-                pac_distance_1,
-                pac_reserved_1,
-                pac_distance_2,
-                pac_reserved_2,
-                pac_distance_3,
-                pac_reserved_3,
-                pac_distance_4,
-                pac_reserved_4,
-                pac_distance_5,
-                pac_reserved_5,
-                pac_distance_6,
-                pac_reserved_6,
-                pac_distance_7,
-                pac_reserved_7,
-                pac_distance_8,
-                pac_reserved_8,
-                pac_distance_9,
-                pac_reserved_9,
-                pac_distance_10,
-                pac_reserved_10,
-                pac_distance_11,
-                pac_reserved_11,
-                pac_distance_12,
-                pac_reserved_12,
-                pac_distance_13,
-                pac_reserved_13,
-                pac_distance_14,
-                pac_reserved_14,
-                pac_distance_15,
-                pac_reserved_15,
+                pac_distance_0, pac_reserved_0,
+                pac_distance_1, pac_reserved_1,
+                pac_distance_2, pac_reserved_2,
+                pac_distance_3, pac_reserved_3,
+                pac_distance_4, pac_reserved_4,
+                pac_distance_5, pac_reserved_5,
+                pac_distance_6, pac_reserved_6,
+                pac_distance_7, pac_reserved_7,
+                pac_distance_8, pac_reserved_8,
+                pac_distance_9, pac_reserved_9,
+                pac_distance_10, pac_reserved_10,
+                pac_distance_11, pac_reserved_11,
+                pac_distance_12, pac_reserved_12,
+                pac_distance_13, pac_reserved_13,
+                pac_distance_14, pac_reserved_14,
+                pac_distance_15, pac_reserved_15,
                 pac_angle_end,
                 pac_crc,) = unpack("=BBBBHHHBHBHBHBHBHBHBHBHBHBHBHBHBHBHBHBHH", payload[0:60])
 
