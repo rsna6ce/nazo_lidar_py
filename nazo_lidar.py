@@ -8,6 +8,9 @@ from struct import unpack
 from PIL import Image
 import numpy as np
 
+IMAGE_WIDTH=320
+IMAGE_HEIGHT=240
+
 def remapDegrees(minAngle, maxAngle, degrees):
     delta = maxAngle - minAngle;
     if (maxAngle < minAngle):
@@ -26,21 +29,24 @@ def plotDistanceMap(degrees, distances, pointcloud, image):
         deg = degrees[i]
         dis = distances[i]
         pos = (int(pointcloud[deg][1]), int(pointcloud[deg][0]))
-        image.putpixel(pos, black)
+        if pos[0] < IMAGE_HEIGHT and pos[1] < IMAGE_WIDTH:
+            image.putpixel(pos, black)
         if (dis < 10000):
             x = int( math.cos((1.0 * math.pi * deg) / 180.0) * (dis / 50.0) + 160)
             y = int( math.sin((1.0 * math.pi * deg) / 180.0) * (dis / 50.0) + 120)
-            image.putpixel((x,y), white)
+            if y < IMAGE_HEIGHT and x < IMAGE_WIDTH:
+                image.putpixel((x,y), white)
             pointcloud[deg][1] = x
             pointcloud[deg][0] = y
 
 def main():
+    print("ESC key to exit")
     header = bytearray([0x55, 0xaa, 0x23, 0x10])
     state = "STATE_WAIT_HEADER"
     counter = 0
     payload = bytearray([0]*64)
     pointcloud = np.zeros((360, 2))
-    image = Image.new("L", (320,240), color=0)
+    image = Image.new("L", (IMAGE_WIDTH,IMAGE_HEIGHT), color=0)
     with serial.Serial('/dev/ttyUSB0', 230400) as ser:
         while True:
             data = ser.read(1)
@@ -119,7 +125,10 @@ def main():
                     plotDistanceMap(degrees, distances, pointcloud, image)
                     cv_image = np.array(image, dtype=np.uint8)
                     cv2.imshow('lidar', cv_image)
-                    cv2.waitKey(1)
+                    key = cv2.waitKey(1)
+                    if key == 27: # wait for ESC key to exit
+                        cv2.destroyAllWindows()
+                        return
                 state = "STATE_WAIT_HEADER"
                 counter = 0
 
