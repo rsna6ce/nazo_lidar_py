@@ -27,13 +27,13 @@ def plotDistanceMap(degrees, distances, pointcloud, image):
     white = 255
     for i in range(16):
         deg = degrees[i]
-        dis = distances[i]
+        dis = distances[i] & 0x3FFF
         pos = (int(pointcloud[deg][1]), int(pointcloud[deg][0]))
-        if pos[0] < IMAGE_HEIGHT and pos[1] < IMAGE_WIDTH:
+        if pos[0] < IMAGE_WIDTH and pos[1] < IMAGE_HEIGHT:
             image.putpixel(pos, black)
         if (dis < 10000):
-            x = int( math.cos((1.0 * math.pi * deg) / 180.0) * (dis / 50.0) + 160)
-            y = int( math.sin((1.0 * math.pi * deg) / 180.0) * (dis / 50.0) + 120)
+            x = int( math.cos((1.0 * math.pi * deg) / 180.0) * (dis / 20.0) + 160)
+            y = int( math.sin((1.0 * math.pi * deg) / 180.0) * (dis / 20.0) + 120)
             if y < IMAGE_HEIGHT and x < IMAGE_WIDTH:
                 image.putpixel((x,y), white)
             pointcloud[deg][1] = x
